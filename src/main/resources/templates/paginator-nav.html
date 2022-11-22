@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<nav th:fragment="paginator">
+		<ul class="pagination">
+
+			<li class="page-item" th:class="${page.first? 'page-item disabled': 'page-item'}"><!--Le vamos a preguntar si es la 1º pagina. Si es así desabilitamos el formato y sino, se lo habilitamos -->
+			<span class="page-link" th:if="${page.first}">Primera</span><!--Comprobamos si estamos en la 1º página con el método del page (Se puede poner con el isFirst o first  -->
+			<a class="page-link" th:if="${not page.first}" th:href="@{${page.url}(page=0)}">Primera</a>
+			</li>
+			
+			<li class="page-item" th:class="${not page.hasPrevious? 'page-item disabled': 'page-item'}"><!--Le vamos a preguntar si tiene pagina anterior. Si es así desabilitamos el formato y sino, se lo habilitamos -->
+			<span class="page-link" th:if="${not page.hasPrevious}">&laquo;</span><!--Página anterior. Si no tiene anterior-->
+			<a class="page-link" th:if="${page.hasPrevious}" th:href="@{${page.url}(page=${page.paginaActual-2})}">&laquo;</a> <!-- es -2 ya que el paginaActual se defina en el PageRender como getPagina +1 -->
+			</li>
+			
+			<li class="page-item" th:each="item: ${page.paginas}" th:class="${item.actual? 'page-item active':'page-item'}"> <!-- Por cada item del listado de páginas, mostramos las páginas. Marcamos la clase de la pagina activa-->
+			<span class="page-link" th:if="${item.actual}" th:text="${item.numero}"></span>
+			<a class="page-link" th:if="${ not item.actual}" th:href="@{${page.url}(page=${item.numero-1})}" th:text="${item.numero}"></a> <!-- Item.numero -1  porque el parametros page va de 0 en adelante-->
+			</li>
+			
+			<li class="page-item" th:class="${not page.hasNext? 'page-item disabled': 'page-item'}"><!--Le vamos a preguntar si tiene pagina siguiente. Si es así desabilitamos el formato y sino, se lo habilitamos -->
+			<span class="page-link" th:if="${not page.hasNext}">&raquo;</span><!--Página anterior. Si no tiene siguiente  -->
+			<a class="page-link" th:if="${page.hasNext}" th:href="@{${page.url}(page=${page.paginaActual})}">&raquo;</a>
+			</li>
+			
+			<li class="page-item" th:class="${page.last? 'page-item disabled': 'page-item'}">
+			<span class="page-link" th:if="${page.last}">&Uacute;ltimo</span><!--Comprobamos si estamos en la última página con el método del page. Y le pasamos el metodos  para que  lo pueda paginar en la bbdd Los rangos van desde 0 hasta un limite-->
+			<a class="page-link" th:if="${not page.last}" th:href="@{${page.url}(page=${page.totalPaginas-1})}">&Uacute;ltimo</a>
+			</li>
+		</ul>
+
+	</nav>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<head th:replace="layout/layout :: head">
+<!-- Quitamos el contenido del head y añadimos el contenido del layout, a traves del nombre del
+ layout definido en la vista layout.html, pasandole la ruta en la que se encuetra-->
+
+</head>
+</head>
+<body>
+	<!-- Quitamos el menú de navegación y añadimos el header de la vista layout.html-->
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<div th:object="${cliente}" th:remove="tag">
+					<!-- Vamos a imprimir todos los mensajes de error -->
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+						<li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+				<form th:action="@{/form}" th:object="${cliente}" method="post"
+					enctype="multipart/form-data">
+					<!-- El action contiene la url hacia la ruta que procesa el formulario tipo post. Tambien está el objeto cliente el que pasa a la vista,
+														 el cual hay que mapearlo al formulario. Importante que el formulario sea tenga el metodo post, ya que cuando se realice un submit se envia mediante 
+														 el boton Crear Cliente y se va al método guardar del controlador con la ruta /form
+														 enctype: Es una codificación que permite enviar archivos como data en el request, en una petición http. Esta codificación es fundamental para el
+														 upload de los archivos de cualquier tipo. Una vez hecho esto necesitamos configurar el aplication properties, para configurar el max de mb
+														 permitido del archivo-->
+					<div class="form-group row mb-2">
+						<label class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombre}" class="form-control"
+								th:errorclass="'form-control alert-danger'" />
+							<!-- Para pintar de fondo rojo el input: th:errorclass="'form-control alert-danger'"-->
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+							<!-- Para que se vea un poco mas pequeño. fields.hasErrors: Comprobamos si tiene errores-->
+						</div>
+					</div>
+
+					<div class="form-group row mb-2">
+						<label class="col-sm-2 col-form-label">Apellido</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{apellido}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row mb-2">
+						<label class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{email}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row mb-2">
+						<label class="col-sm-2 col-fomr-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" th:field="*{createAt}"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="file" class="col-sm-2 col-fomr-label">Foto</label>
+						<div class="col-sm-6">
+							<input type="file" name="file" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group row mb-2">
+						<div class="col-sm-6">
+							<input type="submit" value="Crear Cliente"
+								class="btn btn-secondary">
+						</div>
+					</div>
+					<!-- Vamos a comentar el hidden para realizar el acceso al cliente mediante Sessiones -->
+					<!-- <input type="hidden" th:field="*{id}" /> -->
+					<!-- Al ser autoincremental se agrega como un campo oculto. Con el field mapeamos el nombre del campo-->
+				</form>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout ::footer"></footer>
+</body>
+</html>
